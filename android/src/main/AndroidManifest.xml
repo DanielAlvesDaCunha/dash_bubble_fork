@@ -6,12 +6,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
 
-    <application>
+   <application>
         <service
             android:name="dev.moaz.dash_bubble.src.BubbleService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
-            
-            </application>
+    </application>
 
 </manifest>
