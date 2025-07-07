@@ -10,7 +10,8 @@
         <service
             android:name="dev.moaz.dash_bubble.src.BubbleService"
             android:exported="false"
-            android:foregroundServiceType="dataSync" />
+            android:foregroundServiceType="dataSync"/>
+            
     </application>
 
 </manifest>
