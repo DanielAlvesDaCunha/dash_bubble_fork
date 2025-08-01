@@ -47,10 +47,9 @@ android {
 }
 
 dependencies {
-    // A remoção da dependência específica do Flutter.
-    // O Gradle agora herdará a versão do Flutter do projeto principal,
-    // que já sabe onde encontrar o flutter.jar.
-    // implementation 'io.flutter:flutter_embedding_debug:1.0.0-ef0cd00091'
+    // Adicionando a dependência de forma que o Gradle do plugin saiba
+    // onde encontrar o artefato do Flutter no repositório do Flutter.
+    implementation 'io.flutter:flutter_embedding_debug:1.0.0'
 
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
