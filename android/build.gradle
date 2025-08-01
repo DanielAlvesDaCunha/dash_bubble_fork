@@ -1,30 +1,17 @@
 group   'dev.moaz.dash_bubble'
 version '1.0-SNAPSHOT'
 
-
-/* ------------------------------------------------------------------ */
-/* 1)  Configurações que dizem respeito ao PRÓPRIO Gradle / AGP       */
-/* ------------------------------------------------------------------ */
-// build.gradle (módulo Android) – estilo “clássico” compatível com Gradle 8.4 + AGP 8.2.2
-
-//------------------------------------------------------------
-// 1)  Configuração do próprio Gradle / Android Gradle Plugin
-//------------------------------------------------------------
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        // Android Gradle Plugin & Kotlin Gradle Plugin
         classpath "com.android.tools.build:gradle:8.2.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
     }
 }
 
-//------------------------------------------------------------
-// 2)  Repositórios para todos os sub‑projetos
-//------------------------------------------------------------
 allprojects {
     repositories {
         google()
@@ -33,29 +20,17 @@ allprojects {
     }
 }
 
-//------------------------------------------------------------
-// 3)  Aplicação dos plugins neste módulo
-//------------------------------------------------------------
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 
-//------------------------------------------------------------
-// 4)  Informações do artefato
-//------------------------------------------------------------
-group   = 'dev.moaz.dash_bubble'
-version = '1.0-SNAPSHOT'
-
-//------------------------------------------------------------
-// 5)  Bloco Android
-//------------------------------------------------------------
 android {
     namespace "dev.moaz.dash_bubble"
     compileSdk 34
 
     defaultConfig {
         minSdk 21
-        targetSdkVersion 33
+        targetSdk 33
     }
 
     compileOptions {
@@ -66,37 +41,33 @@ android {
         jvmTarget = '1.8'
     }
 
-    // diretório Kotlin extra
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 }
 
-//------------------------------------------------------------
-// 6)  Flutter embedding local (evita baixar artefato)
-//------------------------------------------------------------
-
-def flutterRoot = System.getenv('FLUTTER_ROOT')
-if (flutterRoot == null) {
-    throw new GradleException('Defina a variável de ambiente FLUTTER_ROOT apontando para o SDK Flutter.')
-}
-
-// ATENÇÃO ao F maiúsculo!
-def flutterJar = file("/home/daniel/development/flutter/bin/cache/artifacts/engine/android-arm64/flutter.jar")
-
-
-//------------------------------------------------------------
-// 7)  Dependências
-//------------------------------------------------------------
-
 dependencies {
-    // usado apenas em tempo de compilação – não embarca no AAR final
-    compileOnly files(flutterJar)      // ✔️  mantém só esta linha
-
+    // Remover a linha 'compileOnly files(flutterJar)'
+    // Adicionar a dependência padrão do Flutter para plugins
+    implementation 'io.flutter:flutter_embedding_debug:1.0.0-ef0cd00091' // Substitua pela sua versão do Flutter
+    
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
     implementation 'io.github.torrydo:floating-bubble-view:0.5.3'
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
-
 }
+
+// As seguintes configurações devem estar nos arquivos de build do projeto principal, não do plugin
+// org.gradle.jvmargs=-Xmx2g -Dkotlin.daemon.jvm.options=-Xmx2g
+// android.useAndroidX=true
+// android.enableJetifier=true
+// distributionBase=GRADLE_USER_HOME
+// distributionPath=wrapper/dists
+// distributionUrl=https\://services.gradle.org/distributions/gradle-8.3-all.zip
+// zipStoreBase=GRADLE_USER_HOME
+// zipStorePath=wrapper/dists
+
+// Para plugins, geralmente não há flutter {} block, a menos que seja um plugin
+// multi-plataforma e isso seja necessário.
+// A configuração do flutter é geralmente herdada do projeto principal.
