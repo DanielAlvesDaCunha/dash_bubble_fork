@@ -1,64 +1,47 @@
-group   'dev.moaz.dash_bubble'
-version '1.0-SNAPSHOT'
+import org.gradle.api.file.Directory
+import org.gradle.api.tasks.Delete
 
+// Configuração do Buildscript para plugins
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
-    dependencies {
-        classpath "com.android.tools.build:gradle:8.2.2"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
-    }
 }
 
+// Configuração dos plugins do projeto
+plugins {
+    id("com.android.application") apply false
+    id("kotlin-android") apply false
+    id("dev.flutter.flutter-gradle-plugin") apply false
+}
+
+// Configuração para todos os subprojetos
 allprojects {
     repositories {
         google()
         mavenCentral()
+        // Adicionar o repositório Maven do Flutter para encontrar os artefatos do Flutter
+        maven { url = uri("$flutterRoot/build/host/outputs/repo") }
         maven { url 'https://storage.googleapis.com/download.flutter.io' }
     }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
+// Redefinindo o diretório de build para que o cache seja compartilhado
+val newBuildDir: Directory = rootProject.layout.buildDirectory.dir("../../build").get()
+rootProject.layout.buildDirectory.value(newBuildDir)
 
-android {
-    namespace "dev.moaz.dash_bubble"
-    compileSdk 34
-
-    defaultConfig {
-        minSdk 21
-        targetSdk 33
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
+subprojects {
+    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
+    project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
 
-dependencies {
-    // A remoção da dependência específica do Flutter.
-    // O Gradle agora herdará a versão do Flutter do projeto principal,
-    // que já sabe onde encontrar o flutter.jar.
-    // As dependências dos plugins do Flutter são adicionadas automaticamente
-    // pelo Gradle do projeto principal. Não é necessário declará-las aqui.
-    implementation 'io.flutter:flutter_embedding_debug:1.0.0'
-
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
-    implementation 'io.github.torrydo:floating-bubble-view:0.5.3'
-
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+// Garante que o projeto 'app' seja avaliado primeiro
+subprojects {
+    project.evaluationDependsOn(":app")
 }
-    // Adicionando a dependência de forma que o Gradle do plugin saiba
-    // onde encontrar o artefato do Flutter no repositório do Flutter.
+
+// Tarefa para limpar o diretório de build
+tasks.register<Delete>("clean") {
+    delete(rootProject.layout.buildDirectory)
+}
