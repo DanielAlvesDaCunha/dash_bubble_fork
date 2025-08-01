@@ -52,6 +52,7 @@ dependencies {
     // que já sabe onde encontrar o flutter.jar.
     // As dependências dos plugins do Flutter são adicionadas automaticamente
     // pelo Gradle do projeto principal. Não é necessário declará-las aqui.
+    implementation 'io.flutter:flutter_embedding_debug:1.0.0'
 
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
@@ -59,3 +60,5 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 }
+    // Adicionando a dependência de forma que o Gradle do plugin saiba
+    // onde encontrar o artefato do Flutter no repositório do Flutter.
