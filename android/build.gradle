@@ -47,9 +47,11 @@ android {
 }
 
 dependencies {
-    // Adicionando a dependência de forma que o Gradle do plugin saiba
-    // onde encontrar o artefato do Flutter no repositório do Flutter.
-    implementation 'io.flutter:flutter_embedding_debug:1.0.0'
+    // A remoção da dependência específica do Flutter.
+    // O Gradle agora herdará a versão do Flutter do projeto principal,
+    // que já sabe onde encontrar o flutter.jar.
+    // As dependências dos plugins do Flutter são adicionadas automaticamente
+    // pelo Gradle do projeto principal. Não é necessário declará-las aqui.
 
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
@@ -57,17 +59,3 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 }
-
-// As seguintes configurações devem estar nos arquivos de build do projeto principal, não do plugin
-// org.gradle.jvmargs=-Xmx2g -Dkotlin.daemon.jvm.options=-Xmx2g
-// android.useAndroidX=true
-// android.enableJetifier=true
-// distributionBase=GRADLE_USER_HOME
-// distributionPath=wrapper/dists
-// distributionUrl=https\://services.gradle.org/distributions/gradle-8.3-all.zip
-// zipStoreBase=GRADLE_USER_HOME
-// zipStorePath=wrapper/dists
-
-// Para plugins, geralmente não há flutter {} block, a menos que seja um plugin
-// multi-plataforma e isso seja necessário.
-// A configuração do flutter é geralmente herdada do projeto principal.
